@@ -1,0 +1,173 @@
+﻿import 'app_locale.dart';
+import 'app_strings.dart';
+
+const AppStrings hindiStrings = AppStrings(
+  locale: AppLocale.hindi,
+  stepLabel1: 'STEP 1 OF 2',
+  selectLanguageTitle: 'भाषा चुनें',
+  selectLanguageSubtitle: 'भाषा चुनें • भाषा निवडा',
+  selectLanguageDescription:
+      'डिजिटल स्वास्थ्य रिकॉर्ड और स्वास्थ्य सेवाओं तक पहुँचने के लिए अपनी पसंतीदा भाषा चुनें।',
+  searchHint: 'भाषा खोजें (हिंदी, Hindi, English...)',
+  continueButton: 'जारी रखें (Continue)',
+  footerStep1: 'आप अपनी भाषा कभी भी खाता सेटिंग्स में बदल सकते हैं।',
+  stepLabel2: 'STEP 2 OF 2',
+  selectRoleTitle: 'अपनी भूमिका चुनें',
+  selectRoleSubtitle: 'अपनी भूमिका चुनें • तुमची भूमिका निवडा',
+  selectRoleDescription:
+      'डिजिटल स्वास्थ्य रिकॉर्ड, सेवाओं और ऑपरेशनल डैशबोर्ड को वैयक्तिकृत करने के लिए अपनी पहुँच भूमिका चुनें।',
+  selectRoleHeader: 'Step 2 of 2: अपनी भूमिका चुनें',
+  footerStep2:
+      'आप प्रोफ़ाइल सेटिंग्स में बाद में अपनी भूमिका बदल सकते हैं।',
+  roles: <RoleCopy>[
+    RoleCopy(
+      title: 'PATIENT',
+      pill: 'रुग्ण / मरीज',
+      description:
+          'डिजिटल प्रिस्क्रिप्शन, डॉक्टर अपॉइंटमेंट, लैब रिपोर्ट और व्यक्तिगत स्वास्थ्य रिकॉर्ड प्राप्त करें।',
+    ),
+    RoleCopy(
+      title: 'ASHA WORKER',
+      pill: 'आशा सेविका',
+      description:
+          'फ़ील्ड सर्वेक्षण, मातृ-शिशु ट्रैकिंग, गांव स्वास्थ्य भ्रमण और टीकाकरण अभियान।',
+    ),
+    RoleCopy(
+      title: 'PHC',
+      pill: 'प्राथमिक स्वास्थ्य केंद्र',
+      description:
+          'प्राथमिक स्वास्थ्य केंद्र के चिकित्सक अधिकारी, दैनिक OPD रिकॉर्ड, स्टॉक आपूर्ति और ग्रामीण रिपोर्टिंग।',
+    ),
+    RoleCopy(
+      title: 'DISTRICT\nHOSPITAL',
+      pill: 'जिला\nअस्पताल',
+      description:
+          'विशेषज्ञ देखभाल, बेड प्रबंधन, आपातकालीन ट्रायाज़ और रेफ़रल समन्वय।',
+    ),
+  ],
+  doneEyebrow: 'पंजीकरण पूरा',
+  doneTitle: 'आप तैयार हैं',
+  doneSubtitle: 'सेटअप पूरा',
+  doneDescription: 'आपकी भाषा और भूमिका सफलतापूर्वक सहेजी गई है।',
+  doneButton: 'पूरा हुआ',
+  doneCaption: 'पंजीकरण पूरा — मुख्यपृष्ठ जल्द ही आ रहा है।',
+  languageLabel: 'भाषा',
+  roleLabel: 'भूमिका',
+  dashboardTitle: 'मुख्यपृष्ठ',
+  dashboardContinueMessage: 'आपके Sehat Sathi डैशबोर्ड में आपका स्वागत है।',
+  dashboardContinueButton: 'जारी रखें',
+  dashboardLogoutLabel: 'लॉग आउट',
+  dashboardPersonalInfoTitle: 'व्यक्तिगत जानकारी',
+  dashboardAccountDetailsTitle: 'खाता विवरण',
+
+  // Login page
+  loginPortalBadge: 'आरोग्य सेवा पोर्टल • Health Portal',
+  loginTitle: 'लॉगिन करें (Login)',
+  loginSubtitle: 'अपने खाते में प्रवेश करें · Access your account',
+  loginDescription:
+      'डिजिटल स्वास्थ्य रिकॉर्ड, अपॉइंटमेंट, प्रिस्क्रिप्शन इतिहास और क्लिनिकल ट्रायज को सुरक्षित ढंग से एक्सेस करें।',
+  loginPhoneOtpTab: 'मोबाईल OTP (Phone)',
+  loginAbhaTab: 'ABHA / Health ID',
+  loginMobileNumberLabel: 'मोबाईल नंबर (Mobile Number) *',
+  loginMobileOtpHint: 'आपके पंजीकृत मोबाईल पर 6 अंकों का OTP भेजा जाएगा।',
+  loginOtpLabel: 'OTP दर्ज करें (Enter 6-digit OTP)',
+  loginResendNow: 'पुनः भेजें (Resend)',
+  loginResendInPrefix: 'पुनः भेजें (Resend in ',
+  loginResendInSuffix: ' s)',
+  loginRememberMe: 'मुझे याद रखें (Remember me)',
+  loginForgotPassword: 'पासवर्ड भूल गए?',
+  loginDummyUserTitle: 'डमी यूज़र / Dummy User (PostgreSQL + MongoDB)',
+  loginDummyUserDetail: 'Ram Krishan Sharma • 9823456780',
+  loginQuickLogin: '1-टैप लॉगिन',
+  loginAsaTitle: 'क्या आप ASHA या PHC स्टाफ हैं?',
+  loginAsaDesc:
+      'स्वास्थ्य कर्मचारियों के लिए विशेष कीमत वाला Health Portal व्यावसायिक विक्री संपर्क करें।',
+  loginTrustRow: '256-Bit Encrypted • ABDM HIPAA Standards',
+  loginPhoneButton: 'लॉगिन करें (Login to Portal)',
+  loginAbhaButton: 'ABHA के साथ लॉगिन करें (Login with ABHA)',
+  loginNewUserText: 'नया खाता खोलना चाहिए? (New user?)',
+  loginRegisterLink: 'रजिस्टर करें (Register)',
+  loginSelectedRoleBadge: 'Selected Role',
+  loginChangeLabel: 'बदलें',
+  loginStepLine: 'Step 1 complete (Changeable)',
+  loginRoleChangeMsg: 'भूमिका बदलने के लिए onboarding पूरा करें।',
+  loginRoleTitle: 'PATIENT',
+  loginRolePill: 'रुग्ण',
+  loginDbSaveNotice: 'डायल बेसिस पर सहेजा गया, लॉगिन #{count}',
+
+  // ABHA / Health ID card
+  abhaNumberLabel: 'ABHA Number या आभा पता (ABHA ID) *',
+  abhaNumberHint: 'उदा. 91-XXXX-XXXX-XXXX या user@abdm',
+  abhaVerifiedLabel: 'अयुष्मान भारत डिजिटल मिशन (ABDM) द्वारा सत्यापित',
+  abhaPinLabel: 'पासवर्ड / सुरक्षा पिन (Security PIN) *',
+  abhaShowLabel: 'Show',
+  abhaHideLabel: 'Hide',
+  abhaCreateNew: 'नया ABHA बनाएं?',
+  abhaForgotPin: 'पिन भूल गए?',
+  abhaAsaTitle: 'क्या आप ASHA या PHC स्टाफ हैं?',
+  abhaAsaDesc:
+      'अपने बायोमेट्रिक या सरकारी Health Portal क्रेडेंशियल्स के साथ लॉगिन करें।',
+
+  // Dashboard
+  dashboardHowFeeling: 'आप कैसे महसूस कर रहे हैं?',
+  dashboardNavHome: 'होम',
+  dashboardNavCare: ' देखभाल',
+  dashboardNavHealth: 'स्वास्थ्य',
+  dashboardNavSchedule: 'शेड्यूल',
+  dashboardNavProfile: 'प्रोफ़ाइल',
+  dashboardTileGetCare: 'मिले ध्यान पाएं',
+  dashboardTileGetCareSub: 'प्रतीक्षा: < 5 मिनट',
+  dashboardTileMyHealth: 'मेरा स्वास्थ्य',
+  dashboardTileMyHealthSub: 'रिकॉर्ड और स्वलीन',
+  dashboardTileMyReferral: 'मेरा रेफरल',
+  dashboardTileMyReferralSub: '1 विशेषज्ञ सक्रिय',
+  dashboardTileMedicines: 'दवाएँ',
+  dashboardTileMedicinesSub: '2 दैनिक रीफिल',
+  dashboardTileAppointment: 'मुलाक़ात',
+  dashboardTileAppointmentSub: 'बुक करें और पुनः अनुसूचित करें',
+  dashboardTileFindNearby: 'पास के स्थान ढूंढें',
+  dashboardTileFindNearbySub: 'फार्मेसी और क्लिनिक',
+  dashboardTodayAppointment: 'आज की मुलाक़ात',
+  dashboardAppointmentTime: '8:30 AM • 45 मिनट में',
+  dashboardDoctorName: 'डॉ. Sarah Jenkins',
+  dashboardDoctorDept: 'सामान्य परामर्श • रूम 4B',
+  dashboardJoinButton: 'Join करें',
+  dashboardSnackSuffix: ' टैप किया गया',
+  dashboardJoining: 'मुलाक़ात में जा रहे हैं...',
+  dashboardLogoutAction: 'Logout / लॉगिन बाहेर पडा',
+  dashboardSessionNotice: 'Session Notice / सत्र सूचना',
+  dashboardLoadError: 'Could not load your dashboard. Please retry.',
+  dashboardRetryAction: 'Retry / पुन्हा प्रयत्न करा',
+  dashboardBackToLogin: 'Back to Login / लॉगिन पेजवर परत जा',
+  dashboardProfileSheetName: 'Ram Krishan Sharma',
+  dashboardProfileSheetPhone: '9823456780',
+
+  // Login success screen
+  loginSuccessStepLabel: 'STEP 3 • LOGIN VERIFIED',
+  loginSuccessTitle: 'लॉगिन सफल! (Login Successful)',
+  loginSuccessSubtitle: 'आपके विवरण सुरक्षित रूप से सहेजे गए हैं · Your details are stored',
+  loginSuccessDescription:
+      'जानकारी "SehatSathi" PostgreSQL और MongoDB डेटाबेस से लाईव पढ़ी गई है (Fetched live from Dual Databases).',
+  loginSuccessButton: 'मुख्यपृष्ठ पर जाएं (Proceed to Home Page)',
+  loginSuccessCaption: 'विवरण PostgreSQL और MongoDB से सफलतापूर्वक पढ़े गए (Dual Database Verified)',
+  loginSuccessDbInfo:
+      'PostgreSQL: 5432 (Users & Auth) • MongoDB: 27017 (Clinical Records)\n'
+      'SehatSathi Database · ABDM Compliant',
+  loginSuccessRecordTitle: 'PostgreSQL दर्ता (Database record)',
+  loginSuccessNoRecord:
+      'इस मोबाइल नंबर के लिए कोई रिकॉर्ड नहीं मिला (No record found for this mobile number).',
+  loginSuccessVerifiedText:
+      'डेटाबेस में दर्ता मिला और नीचे प्रदर्शित है (Record verified in PostgreSQL).',
+  loginSuccessRetry: 'पुनः प्रयास करें (Retry)',
+  loginSuccessMobileLabel: 'मोबाइल (Mobile)',
+  loginSuccessOtpLabel: 'OTP',
+  loginSuccessMethodLabel: 'पद्धत (Method)',
+  loginSuccessRoleLabel: 'भूमिका (Role)',
+  loginSuccessLanguageLabel: 'भाषा (Language)',
+  loginSuccessRememberMeLabel: 'मुझे याद रखें (Remember me)',
+  loginSuccessLoginCountLabel: 'कुल लॉगिन (Login count)',
+  loginSuccessCreatedLabel: 'खाता बनाया गया (Created)',
+  loginSuccessLastLoginLabel: 'अंतिम लॉगिन (Last login)',
+  loginSuccessYes: 'हाँ (Yes)',
+  loginSuccessNo: 'नहीं (No)',
+);

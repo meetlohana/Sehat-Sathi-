@@ -54,7 +54,7 @@ void main() {
     await tester.tap(find.text(hindiStrings.continueButton));
     await tester.pumpAndSettle();
 
-    expect(find.text(hindiStrings.selectRoleTitle), findsOneWidget);
+    expect(find.text(hindiStrings.selectRoleHeader), findsOneWidget);
     expect(find.text(hindiStrings.roles.first.title), findsOneWidget);
   });
 

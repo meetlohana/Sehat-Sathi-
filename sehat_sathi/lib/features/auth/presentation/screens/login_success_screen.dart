@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/i18n/app_strings.dart';
+import '../../../../core/i18n/locale_providers.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
@@ -59,32 +61,28 @@ class _LoginSuccessScreenState extends ConsumerState<LoginSuccessScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AppStrings strings = ref.watch(appStringsProvider);
     return OnboardingScaffold(
-      buttonLabel: 'मुख्यपृष्ठावर जा (Proceed to Home Page)',
-      footerCaption:
-          'तपशील PostgreSQL व MongoDB मधून यशस्वीरित्या वाचले (Dual Database Verified)',
+      buttonLabel: strings.loginSuccessButton,
+      footerCaption: strings.loginSuccessCaption,
       onContinue: () => context.go(AppRoutes.home),
       onBack: () => context.go(AppRoutes.login),
       children: <Widget>[
-        const OnboardingHeader(
-          stepLabel: 'STEP 3 • LOGIN VERIFIED',
-          title: 'लॉगिन यशस्वी! (Login Successful)',
-          bilingualSubtitle:
-              'तुमचे तपशील सुरक्षित साठवले आहेत · Your details are stored',
-          description:
-              'माहिती "SehatSathi" PostgreSQL व MongoDB डेटाबेसमधून पुनर्प्राप्त '
-              'केली आहे (Fetched live from Dual Databases).',
+        OnboardingHeader(
+          stepLabel: strings.loginSuccessStepLabel,
+          title: strings.loginSuccessTitle,
+          bilingualSubtitle: strings.loginSuccessSubtitle,
+          description: strings.loginSuccessDescription,
         ),
         const SizedBox(height: AppSpacing.header),
-        _buildStatusBlock(),
+        _buildStatusBlock(strings),
         if (_record != null) ...<Widget>[
           const SizedBox(height: AppSpacing.lg),
-          _RecordCard(record: _record!),
+          _RecordCard(record: _record!, strings: strings),
         ],
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'PostgreSQL: 5432 (Users & Auth) • MongoDB: 27017 (Clinical Records)\n'
-          'SehatSathi Database · ABDM Compliant',
+          strings.loginSuccessDbInfo,
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontFamily: AppTypography.fontFamily,
@@ -97,7 +95,7 @@ class _LoginSuccessScreenState extends ConsumerState<LoginSuccessScreen> {
     );
   }
 
-  Widget _buildStatusBlock() {
+  Widget _buildStatusBlock(AppStrings strings) {
     if (_loading) {
       return Container(
         height: 120,
@@ -121,15 +119,15 @@ class _LoginSuccessScreenState extends ConsumerState<LoginSuccessScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text('डेटाबेस त्रुटी (Database error)',
+            Text(strings.loginSuccessDbError,
                 style: AppTypography.cardTitle),
             const SizedBox(height: 6),
             Text(_error!, style: AppTypography.bodyCopy),
             const SizedBox(height: 10),
             TextButton(
               onPressed: _loadRecord,
-              child: const Text(
-                'पुन्हा प्रयत्न करा (Retry)',
+              child: Text(
+                strings.loginSuccessRetry,
                 style: TextStyle(
                   fontFamily: AppTypography.fontFamily,
                   fontFamilyFallback: AppTypography.fontFamilyFallback,
@@ -150,9 +148,8 @@ class _LoginSuccessScreenState extends ConsumerState<LoginSuccessScreen> {
           borderRadius: AppRadii.cardAll,
           border: Border.all(color: AppColors.border),
         ),
-        child: const Text(
-          'या मोबाईल क्रमांकासाठी कोणतीही नोंद सापडली नाही '
-          '(No record found for this mobile number).',
+        child: Text(
+          strings.loginSuccessNoRecord,
           style: AppTypography.bodyCopy,
         ),
       );
@@ -165,14 +162,13 @@ class _LoginSuccessScreenState extends ConsumerState<LoginSuccessScreen> {
         border: Border.all(color: AppColors.brand, width: 1.2),
         boxShadow: AppColors.cardShadow,
       ),
-      child: const Row(
+      child: Row(
         children: <Widget>[
-          Icon(Icons.verified_rounded, size: 20, color: AppColors.brand),
-          SizedBox(width: 8),
+          const Icon(Icons.verified_rounded, size: 20, color: AppColors.brand),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'डेटाबेसमध्ये नोंद सापडली आणि ती खाली दाखवली आहे '
-              '(Record verified in PostgreSQL).',
+              strings.loginSuccessVerifiedText,
               style: AppTypography.cardTitle,
             ),
           ),
@@ -184,9 +180,10 @@ class _LoginSuccessScreenState extends ConsumerState<LoginSuccessScreen> {
 
 /// Card echoing every column stored in the `users` table for this login.
 class _RecordCard extends StatelessWidget {
-  const _RecordCard({required this.record});
+  const _RecordCard({required this.record, required this.strings});
 
   final LoginRecord record;
+  final AppStrings strings;
 
   static final DateFormat _fmt = DateFormat('dd MMM yyyy, hh:mm a');
 
@@ -202,20 +199,20 @@ class _RecordCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Text('PostgreSQL नोंद (Database record)',
+          Text(strings.loginSuccessRecordTitle,
               style: AppTypography.cardTitle),
           const SizedBox(height: 12),
-          _row('मोबाईल (Mobile)', '+91 ${record.mobileNumber}'),
-          _row('OTP', record.otpCode ?? '—'),
-          _row('पद्धत (Method)', record.loginMethod),
-          _row('भूमिका (Role)', record.role.toUpperCase()),
-          _row('भाषा (Language)', record.language),
-          _row('मला लक्षात ठेवा (Remember me)',
-              record.rememberMe ? 'होय (Yes)' : 'नाही (No)'),
-          _row('एकूण लॉगिन (Login count)', '#${record.loginCount}'),
-          _row('खाते तयार (Created)', _fmt.format(record.createdAt)),
+          _row(strings.loginSuccessMobileLabel, '+91 ${record.mobileNumber}'),
+          _row(strings.loginSuccessOtpLabel, record.otpCode ?? '—'),
+          _row(strings.loginSuccessMethodLabel, record.loginMethod),
+          _row(strings.loginSuccessRoleLabel, record.role.toUpperCase()),
+          _row(strings.loginSuccessLanguageLabel, record.language),
+          _row(strings.loginSuccessRememberMeLabel,
+              record.rememberMe ? strings.loginSuccessYes : strings.loginSuccessNo),
+          _row(strings.loginSuccessLoginCountLabel, '#${record.loginCount}'),
+          _row(strings.loginSuccessCreatedLabel, _fmt.format(record.createdAt)),
           _row(
-              'शेवटचे लॉगिन (Last login)',
+              strings.loginSuccessLastLoginLabel,
               _fmt.format(record.lastLoginAt)),
         ],
       ),

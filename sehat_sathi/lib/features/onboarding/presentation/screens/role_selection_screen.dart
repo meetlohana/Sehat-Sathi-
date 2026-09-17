@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/i18n/app_locale.dart';
+import '../../../../core/i18n/app_strings.dart';
 import '../../../../core/i18n/locale_providers.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -297,7 +299,9 @@ class _RoleCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: twoLineBadge
+                          ? CrossAxisAlignment.start
+                          : CrossAxisAlignment.center,
                       children: <Widget>[
                         Expanded(
                           child: Text(

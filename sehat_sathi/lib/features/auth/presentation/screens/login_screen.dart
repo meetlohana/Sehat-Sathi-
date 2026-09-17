@@ -9,12 +9,13 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/i18n/locale_persistence.dart';
+import '../../../onboarding/data/onboarding_catalog.dart';
+import '../../../onboarding/domain/onboarding_models.dart';
 import '../../../onboarding/presentation/providers/onboarding_providers.dart';
 import '../../data/login_repository.dart';
 import '../../data/user_health_repository.dart';
-import '../widgets/login_widgets.dart';
 import '../widgets/abha_health_id_card.dart';
+import '../widgets/login_widgets.dart';
 
 /// Login page transcribed from the approved reference
 /// (`image/login.png`): bilingual portal login with mobile OTP entry.
@@ -113,15 +114,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     FocusScope.of(context).unfocus();
     if (_isSubmitting) return;
     final String mobile = _phoneController.text.trim();
+    final AppStrings strings = ref.read(appStringsProvider);
     if (!_isPhoneValid) {
-      _showSnack('कृपया 10 अंकी वैध मोबाईल क्रमांक टाका '
-          '(Enter a valid 10-digit mobile number).');
+      _showSnack(strings.loginPhoneValidationError);
       return;
     }
     final String otp = _enteredOtp.isEmpty ? '492700' : _enteredOtp;
     if (otp.length < 4) {
-      _showSnack('कृपया संपूर्ण 6 अंकी OTP टाका '
-          '(Enter the complete 6-digit OTP).');
+      _showSnack(strings.loginOtpValidationError);
       return;
     }
     setState(() => _isSubmitting = true);
@@ -136,8 +136,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         rememberMe: _rememberMe,
       );
       if (!mounted) return;
-      _showSnack('यशस्वी! तपशील PostgreSQL व MongoDB मध्ये साठवले '
-          '(Saved to Dual Databases, login #${record.loginCount}).');
+      _showSnack(strings.loginDbSaveNotice.replaceAll('#{count}', record.loginCount.toString()));
       await Future<void>.delayed(const Duration(milliseconds: 500));
       if (!mounted) return;
       unawaited(
@@ -145,7 +144,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
     } on Object catch (error) {
       if (!mounted) return;
-      _showSnack('डेटाबेस सूचना (Notice): $error');
+      _showSnack(strings.loginDbErrorPrefix + error.toString());
       // Graceful navigation if network delay
       context.go(AppRoutes.home);
     } finally {
@@ -170,7 +169,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         rememberMe: true,
       );
       if (!mounted) return;
-      _showSnack('डमी युझर लॉगिन यशस्वी! मुख्यपृष्ठावर जात आहे...');
+      _showSnack(ref.read(appStringsProvider).loginDummyLoginSuccessMsg);
       await Future<void>.delayed(const Duration(milliseconds: 400));
       if (!mounted) return;
       context.go(AppRoutes.home);
@@ -187,6 +186,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AppStrings strings = ref.watch(appStringsProvider);
+    final String localeId = ref.watch(localeIdProvider);
+    final LanguageOption? langOpt = OnboardingCatalog.languageById(localeId);
+    final LanguageOption? engOpt = OnboardingCatalog.languageById('en');
+    final String languageLabel = '${langOpt?.nativeName ?? ''} / ${engOpt?.monogram ?? 'EN'}';
+
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
@@ -206,25 +211,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     LoginTopBar(
-                      languageLabel: 'मराठी / EN',
+                      languageLabel: languageLabel,
                       onBack: () => Navigator.of(context).maybePop(),
                     ),
                     const SizedBox(height: AppSpacing.header),
-                    const LoginHeader(
-                      badgeLabel: 'आरोग्य सेवा पोर्टल • Health Portal',
-                      title: 'लॉगिन करा (Login)',
-                      subtitle:
-                          'आपल्या खात्यात प्रवेश करा · Access your account',
-                      description:
-                          'Access digital health records, appointments, '
-                          'prescription history, and clinical triage securely.',
+                    LoginHeader(
+                      badgeLabel: strings.loginPortalBadge,
+                      title: strings.loginTitle,
+                      subtitle: strings.loginSubtitle,
+                      description: strings.loginDescription,
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     LoginMethodTabs(
                       selectedIndex: _methodIndex,
-                      labels: const <String>[
-                        'मोबाईल OTP (Phone)',
-                        'ABHA / Health ID',
+                      labels: <String>[
+                        strings.loginPhoneOtpTab,
+                        strings.loginAbhaTab,
                       ],
                       onChanged: (int index) => setState(() => _methodIndex = index),
                     ),
@@ -233,13 +235,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // ─── Phone OTP body ────────────────────────────────────
                       ...<Widget>[
                         SelectedRoleCard(
-                          roleTitle: 'PATIENT',
-                          rolePill: 'रुग्ण',
-                          stepLine: 'Step 1 पूर्ण (Changeable)',
-                          selectedLabel: 'Selected Role',
-                          changeLabel: 'बदला',
+                          roleTitle: strings.loginRoleTitle,
+                          rolePill: strings.loginRolePill,
+                          stepLine: strings.loginStepLine,
+                          selectedLabel: strings.loginSelectedRoleBadge,
+                          changeLabel: strings.loginChangeLabel,
                           onChange: () =>
-                              _showSnack('भूमिका बदलण्यासाठी onboarding पूर्ण करा.'),
+                              _showSnack(strings.loginRoleChangeMsg),
                         ),
                         const SizedBox(height: AppSpacing.md),
                         Container(
@@ -260,10 +262,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const <Widget>[
+                                  children: <Widget>[
                                     Text(
-                                      'डमी युझर / Dummy User (PostgreSQL + MongoDB)',
-                                      style: TextStyle(
+                                      strings.loginDummyUserTitle,
+                                      style: const TextStyle(
                                         fontFamily: AppTypography.fontFamily,
                                         fontWeight: FontWeight.w700,
                                         fontSize: 12,
@@ -271,8 +273,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       ),
                                     ),
                                     Text(
-                                      'राम कृष्ण शर्मा • 9823456780',
-                                      style: TextStyle(
+                                      strings.loginDummyUserDetail,
+                                      style: const TextStyle(
                                         fontFamily: AppTypography.fontFamily,
                                         fontSize: 11,
                                         color: AppColors.muted,
@@ -294,9 +296,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: const Text(
-                                  '1-टॅप लॉगिन',
-                                  style: TextStyle(
+                                child: Text(
+                                  strings.loginQuickLogin,
+                                  style: const TextStyle(
                                     fontFamily: AppTypography.fontFamily,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12,
@@ -307,16 +309,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSpacing.lg),
-                        const LoginFieldLabel(
-                          label: 'मोबाईल क्रमांक (Mobile Number) *',
+                        LoginFieldLabel(
+                          label: strings.loginMobileNumberLabel,
                           trailingLabel: '',
                         ),
                         const SizedBox(height: 6),
                         PhoneField(controller: _phoneController),
                         const SizedBox(height: 4),
-                        const Text(
-                          'आपल्या नोंदणीकृत मोबाईल वर 6 अंकी OTP पाठवला जाईल.',
-                          style: TextStyle(
+                        Text(
+                          strings.loginMobileOtpHint,
+                          style: const TextStyle(
                             fontFamily: AppTypography.fontFamily,
                             fontFamilyFallback: AppTypography.fontFamilyFallback,
                             fontSize: 10.5,
@@ -325,10 +327,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         LoginFieldLabel(
-                          label: 'एंटर करा OTP (Enter 6-digit OTP)',
+                          label: strings.loginOtpLabel,
                           trailingLabel: _resendSeconds > 0
-                              ? 'पुन्हा पाठवा (Resend in $_resendSeconds s)'
-                              : 'पुन्हा पाठवा (Resend)',
+                              ? '${strings.loginResendInPrefix}$_resendSeconds${strings.loginResendInSuffix}'
+                              : strings.loginResendNow,
                           onTrailingTap:
                               _resendSeconds > 0 ? null : _startResendCountdown,
                         ),
@@ -340,21 +342,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: AppSpacing.control),
                         RememberRow(
-                          label: 'मला लक्षात ठेवा (Remember me)',
-                          forgotLabel: 'पासवर्ड विसरला?',
+                          label: strings.loginRememberMe,
+                          forgotLabel: strings.loginForgotPassword,
                           value: _rememberMe,
                           onChanged: (bool value) => setState(() => _rememberMe = value),
                         ),
                         const SizedBox(height: AppSpacing.lg),
-                        const AshaInfoCard(
-                          title: 'ASHA किंवा PHC कर्मचारी आहात?',
-                          description:
-                              'आरोग्य कार्यकर्त्यांसाठी विशेष किंमत Health Portal '
-                              'व्यावसायिक ग्राही विक्री संपर्क साधा.',
+                        AshaInfoCard(
+                          title: strings.loginAsaTitle,
+                          description: strings.loginAsaDesc,
                         ),
                         const SizedBox(height: AppSpacing.lg),
-                        const TrustRow(
-                          label: '256-Bit Encrypted • ABDM HIPAA Standards',
+                        TrustRow(
+                          label: strings.loginTrustRow,
                         ),
                       ]
                     else
@@ -366,10 +366,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             LoginFooter(
               buttonLabel: _methodIndex == 0
-                  ? 'लॉगिन करा (Login to Portal)'
-                  : 'ABHA सह लॉगिन करा (Login with ABHA)',
-              captionPrefix: 'नवीन खाते उघडायचे आहे का? (New user?)  ',
-              captionLink: 'नोंदणी करा (Register)',
+                  ? strings.loginPhoneButton
+                  : strings.loginAbhaButton,
+              captionPrefix: strings.loginNewUserText,
+              captionLink: strings.loginRegisterLink,
               isBusy: _isSubmitting,
               onContinue: _methodIndex == 0 ? _submitLogin : () {},
             ),

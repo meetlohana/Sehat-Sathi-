@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/i18n/app_strings.dart';
+import '../../../../core/i18n/locale_providers.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -14,15 +17,15 @@ import '../../../../core/theme/app_typography.dart';
 /// – ASHA / PHC info card
 /// – 256-bit encrypted trust row
 /// – "ABHA सह लॉगिन करा" gradient footer button
-class AbhaHealthIdCard extends StatefulWidget {
+class AbhaHealthIdCard extends ConsumerStatefulWidget {
   const AbhaHealthIdCard({super.key, required this.mobileNumber});
   final String mobileNumber;
 
   @override
-  State<AbhaHealthIdCard> createState() => _AbhaHealthIdCardState();
+  ConsumerState<AbhaHealthIdCard> createState() => _AbhaHealthIdCardState();
 }
 
-class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
+class _AbhaHealthIdCardState extends ConsumerState<AbhaHealthIdCard> {
   final TextEditingController _abhaController = TextEditingController(
     text: '',
   );
@@ -38,6 +41,7 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
 
   @override
   Widget build(BuildContext context) {
+    final AppStrings strings = ref.watch(appStringsProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -66,12 +70,12 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Row(
                       children: <Widget>[
                         Text(
-                          'PATIENT',
-                          style: TextStyle(
+                          strings.loginRoleTitle,
+                          style: const TextStyle(
                             fontFamily: AppTypography.fontFamily,
                             fontFamilyFallback: AppTypography.fontFamilyFallback,
                             fontSize: 13,
@@ -80,12 +84,12 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
                             color: AppColors.ink,
                           ),
                         ),
-                        SizedBox(width: 6),
-                        Text('•', style: TextStyle(color: AppColors.muted, fontSize: 12)),
-                        SizedBox(width: 6),
+                        const SizedBox(width: 6),
+                        const Text('•', style: TextStyle(color: AppColors.muted, fontSize: 12)),
+                        const SizedBox(width: 6),
                         Text(
-                          'रुग्ण',
-                          style: TextStyle(
+                          strings.loginRolePill,
+                          style: const TextStyle(
                             fontFamily: AppTypography.fontFamily,
                             fontFamilyFallback: AppTypography.fontFamilyFallback,
                             fontSize: 12,
@@ -93,14 +97,14 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
                             color: AppColors.brand,
                           ),
                         ),
-                        SizedBox(width: 6),
-                        _SmallBadge(label: 'Selected Role'),
+                        const SizedBox(width: 6),
+                        _SmallBadge(label: strings.loginSelectedRoleBadge),
                       ],
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
-                      'Step 1 निवडलेली भूमिका (Changeable)',
-                      style: TextStyle(
+                      strings.loginStepLine,
+                      style: const TextStyle(
                         fontFamily: AppTypography.fontFamily,
                         fontFamilyFallback: AppTypography.fontFamilyFallback,
                         fontSize: 11,
@@ -117,9 +121,9 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                child: const Text(
-                  'बदला',
-                  style: TextStyle(
+                child: Text(
+                  strings.loginChangeLabel,
+                  style: const TextStyle(
                     fontFamily: AppTypography.fontFamily,
                     fontFamilyFallback: AppTypography.fontFamilyFallback,
                     fontSize: 13,
@@ -134,18 +138,16 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
         const SizedBox(height: 20),
 
         // ── ABHA Number field ─────────────────────────────────────────────
-        const _FieldLabel(
-          label: 'ABHA Number किंवा आभा पत्ता (ABHA ID) *',
-        ),
+        _FieldLabel(label: strings.abhaNumberLabel),
         const SizedBox(height: 6),
         _AbhaTextField(
           controller: _abhaController,
-          hintText: 'उदा. 91-XXXX-XXXX-XXXX किंवा user@abdm',
+          hintText: strings.abhaNumberHint,
         ),
         const SizedBox(height: 4),
-        const Text(
-          'Ayushman Bharat Digital Mission (ABDM) द्वारे सत्यापित',
-          style: TextStyle(
+        Text(
+          strings.abhaVerifiedLabel,
+          style: const TextStyle(
             fontFamily: AppTypography.fontFamily,
             fontFamilyFallback: AppTypography.fontFamilyFallback,
             fontSize: 10.5,
@@ -155,14 +157,14 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
         const SizedBox(height: 18),
 
         // ── Security PIN field ────────────────────────────────────────────
-        const _FieldLabel(
-          label: 'पासवर्ड / सुरक्षा पिन (Security PIN) *',
-        ),
+        _FieldLabel(label: strings.abhaPinLabel),
         const SizedBox(height: 6),
         _PinTextField(
           controller: _pinController,
           obscure: !_showPin,
           onToggle: () => setState(() => _showPin = !_showPin),
+          showLabel: strings.abhaShowLabel,
+          hideLabel: strings.abhaHideLabel,
         ),
         const SizedBox(height: 10),
 
@@ -172,9 +174,9 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
           children: <Widget>[
             GestureDetector(
               onTap: () {},
-              child: const Text(
-                'नवीन ABHA तयार करा?',
-                style: TextStyle(
+              child: Text(
+                strings.abhaCreateNew,
+                style: const TextStyle(
                   fontFamily: AppTypography.fontFamily,
                   fontFamilyFallback: AppTypography.fontFamilyFallback,
                   fontSize: 12.5,
@@ -185,9 +187,9 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
             ),
             GestureDetector(
               onTap: () {},
-              child: const Text(
-                'पिन विसरलात?',
-                style: TextStyle(
+              child: Text(
+                strings.abhaForgotPin,
+                style: const TextStyle(
                   fontFamily: AppTypography.fontFamily,
                   fontFamilyFallback: AppTypography.fontFamilyFallback,
                   fontSize: 12.5,
@@ -210,16 +212,16 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const <Widget>[
-              Icon(Icons.info_outline_rounded, size: 16, color: AppColors.brand),
-              SizedBox(width: 10),
+            children: <Widget>[
+              const Icon(Icons.info_outline_rounded, size: 16, color: AppColors.brand),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'ASHA किंवा PHC अधिकारी आहात?',
-                      style: TextStyle(
+                      strings.abhaAsaTitle,
+                      style: const TextStyle(
                         fontFamily: AppTypography.fontFamily,
                         fontFamilyFallback: AppTypography.fontFamilyFallback,
                         fontSize: 12.5,
@@ -227,10 +229,10 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
                         color: AppColors.ink,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
-                      'आपल्या बायोमेट्रिक किंवा शासकीय Health Portal केडेंशियल्स द्वारे लॉगिन करू शकता.',
-                      style: TextStyle(
+                      strings.abhaAsaDesc,
+                      style: const TextStyle(
                         fontFamily: AppTypography.fontFamily,
                         fontFamilyFallback: AppTypography.fontFamilyFallback,
                         fontSize: 11.5,
@@ -249,15 +251,16 @@ class _AbhaHealthIdCardState extends State<AbhaHealthIdCard> {
         // ── Trust row ─────────────────────────────────────────────────────
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.muted),
-            SizedBox(width: 6),
+          children: <Widget>[
+            const Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.muted),
+            const SizedBox(width: 6),
             Text(
-              '256-Bit Encrypted • ABDM HIPAA Standards',
-              style: TextStyle(
+              strings.loginTrustRow,
+              style: const TextStyle(
                 fontFamily: AppTypography.fontFamily,
                 fontFamilyFallback: AppTypography.fontFamilyFallback,
                 fontSize: 11,
+                fontWeight: FontWeight.w400,
                 color: AppColors.muted,
               ),
             ),
@@ -360,10 +363,14 @@ class _PinTextField extends StatelessWidget {
     required this.controller,
     required this.obscure,
     required this.onToggle,
+    required this.showLabel,
+    required this.hideLabel,
   });
   final TextEditingController controller;
   final bool obscure;
   final VoidCallback onToggle;
+  final String showLabel;
+  final String hideLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -407,7 +414,7 @@ class _PinTextField extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Text(
-                obscure ? 'Show' : 'Hide',
+                obscure ? showLabel : hideLabel,
                 style: const TextStyle(
                   fontFamily: AppTypography.fontFamily,
                   fontFamilyFallback: AppTypography.fontFamilyFallback,

@@ -95,6 +95,10 @@ const AppStrings marathiStrings = AppStrings(
   loginRolePill: 'रुग्ण',
   loginDbSaveNotice:
       'Dual Database मध्ये साठवले गेले, लॉगिन #{count}',
+  loginPhoneValidationError: 'कृपया 10 अंकी वैध मोबाईल क्रमांक टाका.',
+  loginOtpValidationError: 'कृपया संपूर्ण 6 अंकी OTP टाका.',
+  loginDummyLoginSuccessMsg: 'डमी युझर लॉगिन यशस्वी! मुख्यपृष्ठावर जात आहे...',
+  loginDbErrorPrefix: 'डेटाबेस सूचना (Notice): ',
 
   // ABHA / Health ID card
   abhaNumberLabel: 'ABHA Number किंवा आभा पत्ता (ABHA ID) *',
@@ -158,6 +162,7 @@ const AppStrings marathiStrings = AppStrings(
   loginSuccessRecordTitle: 'PostgreSQL नोंद (Database record)',
   loginSuccessNoRecord:
       'या मोबाईल क्रमांकासाठी कोणतीही नोंद सापडली नाही (No record found for this mobile number).',
+  loginSuccessDbError: 'डेटाबेस त्रुटी (Database error)',
   loginSuccessVerifiedText:
       'डेटाबेसमध्ये नोंद सापडली आणि ती खाली दाखवली आहे (Record verified in PostgreSQL).',
   loginSuccessRetry: 'पुन्हा प्रयत्न करा (Retry)',
@@ -172,4 +177,19 @@ const AppStrings marathiStrings = AppStrings(
   loginSuccessLastLoginLabel: 'शेवटचे लॉगिन (Last login)',
   loginSuccessYes: 'होय (Yes)',
   loginSuccessNo: 'नाही (No)',
+
+  // Chat bot screen
+  chatSymptomFever: 'तापन',
+  chatSymptomCough: 'खोकला',
+  chatSymptomLegPain: 'पायदुःख',
+  chatSymptomThroatPain: 'गळदुःख',
+  chatSymptomOthers: 'इतर',
+
+  // Health records QR / upload
+  dashboardQrCodeLabel: 'आरोग्य आईडी QR कोड',
+  dashboardUploadButton: 'आरोग्य रेकॉर्ड अपलोड करा',
+  dashboardUploadSuccessMsg: 'आरोग्य रेकॉर्ड यशस्वीरित्या अपलोड केला गेला!',
+  dashboardUpcomingAppointments: 'पुढील अॅपॉइंटमेंट',
+  dashboardPreviousAppointments: 'मागील अॅपॉइंटमेंट',
+  dashboardViewAllAppointments: 'सर्व बघा',
 );

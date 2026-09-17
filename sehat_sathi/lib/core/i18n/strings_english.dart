@@ -96,6 +96,10 @@ const AppStrings englishStrings = AppStrings(
   loginRolePill: 'रुग्ण',
   loginDbSaveNotice:
       'Saved to Dual Databases, login #{count}',
+  loginPhoneValidationError: 'Please enter a valid 10-digit mobile number.',
+  loginOtpValidationError: 'Please enter the complete 6-digit OTP.',
+  loginDummyLoginSuccessMsg: 'Demo login successful! Navigating to Home Page...',
+  loginDbErrorPrefix: 'Database notice: ',
 
   // ABHA / Health ID card
   abhaNumberLabel: 'ABHA Number किंवा आभा पत्ता (ABHA ID) *',
@@ -157,7 +161,8 @@ const AppStrings englishStrings = AppStrings(
       'SehatSathi Database · ABDM Compliant',
   loginSuccessRecordTitle: 'PostgreSQL नोंद (Database record)',
   loginSuccessNoRecord:
-      'या मोबाईल क्रमांकासाठी कोणतीही नोंद सापडली नाही (No record found for this mobile number).',
+      'No record found for this mobile number.',
+  loginSuccessDbError: 'Database error',
   loginSuccessVerifiedText:
       'डेटाबेसमध्ये नोंद सापडली आणि ती खाली दाखवली आहे (Record verified in PostgreSQL).',
   loginSuccessRetry: 'पुन्हा प्रयत्न करा (Retry)',
@@ -170,6 +175,21 @@ const AppStrings englishStrings = AppStrings(
   loginSuccessLoginCountLabel: 'एकूण लॉगिन (Login count)',
   loginSuccessCreatedLabel: 'खाते तयार (Created)',
   loginSuccessLastLoginLabel: 'शेवटचे लॉगिन (Last login)',
-  loginSuccessYes: 'होय (Yes)',
-  loginSuccessNo: 'नाही (No)',
+  loginSuccessYes: 'Yes / होय',
+  loginSuccessNo: 'No / नाही',
+
+  // Chat bot screen
+  chatSymptomFever: 'Fever',
+  chatSymptomCough: 'Cough',
+  chatSymptomLegPain: 'Leg pain',
+  chatSymptomThroatPain: 'Throat pain',
+  chatSymptomOthers: 'Others',
+
+  // Health records QR / upload
+  dashboardQrCodeLabel: 'Health ID QR Code',
+  dashboardUploadButton: 'Upload Health Record',
+  dashboardUploadSuccessMsg: 'Health record uploaded successfully!',
+  dashboardUpcomingAppointments: 'Upcoming Appointments',
+  dashboardPreviousAppointments: 'Previous Appointments',
+  dashboardViewAllAppointments: 'View All',
 );

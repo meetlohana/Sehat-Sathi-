@@ -68,6 +68,10 @@ class AppStrings {
     required this.loginRoleTitle,
     required this.loginRolePill,
     required this.loginDbSaveNotice,
+    required this.loginPhoneValidationError,
+    required this.loginOtpValidationError,
+    required this.loginDummyLoginSuccessMsg,
+    required this.loginDbErrorPrefix,
 
     // ABHA / Health ID card
     required this.abhaNumberLabel,
@@ -125,6 +129,7 @@ class AppStrings {
     required this.loginSuccessDbInfo,
     required this.loginSuccessRecordTitle,
     required this.loginSuccessNoRecord,
+    required this.loginSuccessDbError,
     required this.loginSuccessVerifiedText,
     required this.loginSuccessRetry,
     required this.loginSuccessMobileLabel,
@@ -138,6 +143,21 @@ class AppStrings {
     required this.loginSuccessLastLoginLabel,
     required this.loginSuccessYes,
     required this.loginSuccessNo,
+
+    // Chat bot screen
+    required this.chatSymptomFever,
+    required this.chatSymptomCough,
+    required this.chatSymptomLegPain,
+    required this.chatSymptomThroatPain,
+    required this.chatSymptomOthers,
+
+    // Health records QR / upload
+    required this.dashboardQrCodeLabel,
+    required this.dashboardUploadButton,
+    required this.dashboardUploadSuccessMsg,
+    required this.dashboardUpcomingAppointments,
+    required this.dashboardPreviousAppointments,
+    required this.dashboardViewAllAppointments,
   });
 
   final AppLocale locale;
@@ -202,6 +222,10 @@ class AppStrings {
   final String loginRoleTitle;
   final String loginRolePill;
   final String loginDbSaveNotice;
+  final String loginPhoneValidationError;
+  final String loginOtpValidationError;
+  final String loginDummyLoginSuccessMsg;
+  final String loginDbErrorPrefix;
 
   // ABHA / Health ID card
   final String abhaNumberLabel;
@@ -259,6 +283,7 @@ class AppStrings {
   final String loginSuccessDbInfo;
   final String loginSuccessRecordTitle;
   final String loginSuccessNoRecord;
+  final String loginSuccessDbError;
   final String loginSuccessVerifiedText;
   final String loginSuccessRetry;
   final String loginSuccessMobileLabel;
@@ -272,6 +297,21 @@ class AppStrings {
   final String loginSuccessLastLoginLabel;
   final String loginSuccessYes;
   final String loginSuccessNo;
+
+  // Chat bot screen
+  final String chatSymptomFever;
+  final String chatSymptomCough;
+  final String chatSymptomLegPain;
+  final String chatSymptomThroatPain;
+  final String chatSymptomOthers;
+
+  // Health records QR / upload
+  final String dashboardQrCodeLabel;
+  final String dashboardUploadButton;
+  final String dashboardUploadSuccessMsg;
+  final String dashboardUpcomingAppointments;
+  final String dashboardPreviousAppointments;
+  final String dashboardViewAllAppointments;
 
   static AppStrings ofId(String? id) {
     switch (AppLocale.fromId(id)) {

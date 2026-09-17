@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/i18n/app_strings.dart';
+import '../../../../core/i18n/locale_providers.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../auth/data/user_health_repository.dart';
 import '../providers/dashboard_providers.dart';
 
 /// Home Page (Dashboard) — matches image/Home_Page.png exactly.
@@ -22,10 +25,12 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<DashboardUser> userAsync = ref.watch(dashboardUserProvider);
+    final AppStrings strings = ref.watch(appStringsProvider);
 
     return userAsync.when(
       loading: () => const _Loading(),
       error: (Object error, StackTrace stack) => _Error(
+        strings: strings,
         onRetry: () => ref.read(dashboardUserProvider.notifier).refresh(),
         onLogout: () async {
           await ref.read(dashboardUserProvider.notifier).logout();
@@ -34,6 +39,7 @@ class DashboardScreen extends ConsumerWidget {
       ),
       data: (DashboardUser user) => _HomeContent(
         user: user,
+        strings: strings,
         onLogout: () async {
           await ref.read(dashboardUserProvider.notifier).logout();
           if (context.mounted) context.go(AppRoutes.login);
@@ -63,7 +69,8 @@ class _Loading extends StatelessWidget {
 }
 
 class _Error extends StatelessWidget {
-  const _Error({required this.onRetry, required this.onLogout});
+  const _Error({required this.strings, required this.onRetry, required this.onLogout});
+  final AppStrings strings;
   final VoidCallback onRetry;
   final VoidCallback onLogout;
 
@@ -80,14 +87,14 @@ class _Error extends StatelessWidget {
             children: <Widget>[
               const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.brand),
               const SizedBox(height: 16),
-              const Text(
-                'Session Notice / सत्र सूचना',
+              Text(
+                strings.dashboardSessionNotice,
                 style: AppTypography.screenTitle,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Could not load your dashboard. Please retry.',
+              Text(
+                strings.dashboardLoadError,
                 style: AppTypography.bodyCopy,
                 textAlign: TextAlign.center,
               ),
@@ -100,7 +107,7 @@ class _Error extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: AppRadii.buttonAll),
                 ),
-                child: const Text('Retry / पुन्हा प्रयत्न करा'),
+                child: Text(strings.dashboardRetryAction),
               ),
               const SizedBox(height: 12),
               OutlinedButton(
@@ -110,7 +117,7 @@ class _Error extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: AppRadii.buttonAll),
                   side: const BorderSide(color: AppColors.border),
                 ),
-                child: const Text('Back to Login / लॉगिन पेजवर परत जा'),
+                child: Text(strings.dashboardBackToLogin),
               ),
             ],
           ),
@@ -124,8 +131,9 @@ class _Error extends StatelessWidget {
 // Main Home Content
 // ─────────────────────────────────────────────────────────────────────────────
 class _HomeContent extends StatefulWidget {
-  const _HomeContent({required this.user, required this.onLogout});
+  const _HomeContent({required this.user, required this.strings, required this.onLogout});
   final DashboardUser user;
+  final AppStrings strings;
   final VoidCallback onLogout;
 
   @override
@@ -135,55 +143,62 @@ class _HomeContent extends StatefulWidget {
 class _HomeContentState extends State<_HomeContent> {
   int _selectedNav = 0;
 
-  static const List<_NavItem> _navItems = <_NavItem>[
-    _NavItem(icon: Icons.home_rounded, label: 'Home'),
-    _NavItem(icon: Icons.healing_rounded, label: 'Care'),
-    _NavItem(icon: Icons.favorite_rounded, label: 'Health'),
-    _NavItem(icon: Icons.calendar_today_rounded, label: 'Schedule'),
-    _NavItem(icon: Icons.person_outline_rounded, label: 'Profile'),
-  ];
+  List<_NavItem> _buildNavItems(AppStrings strings) {
+    return <_NavItem>[
+      _NavItem(icon: Icons.home_rounded, label: strings.dashboardNavHome),
+      _NavItem(icon: Icons.healing_rounded, label: strings.dashboardNavCare),
+      _NavItem(icon: Icons.favorite_rounded, label: strings.dashboardNavHealth),
+      _NavItem(icon: Icons.calendar_today_rounded, label: strings.dashboardNavSchedule),
+      _NavItem(icon: Icons.person_outline_rounded, label: strings.dashboardNavProfile),
+    ];
+  }
 
-  static const List<_ActionTile> _tiles = <_ActionTile>[
-    _ActionTile(
-      icon: Icons.add_circle_outline_rounded,
-      iconColor: Color(0xFF4A90D9),
-      label: 'GET CARE',
-      sub: 'Wait: < 5 mins',
-    ),
-    _ActionTile(
-      icon: Icons.favorite_rounded,
-      iconColor: Color(0xFFE05C7A),
-      label: 'MY HEALTH',
-      sub: 'Records & Vitals',
-    ),
-    _ActionTile(
-      icon: Icons.description_outlined,
-      iconColor: Color(0xFF4A90D9),
-      label: 'MY REFERRAL',
-      sub: '1 Specialist Active',
-    ),
-    _ActionTile(
-      icon: Icons.science_rounded,
-      iconColor: Color(0xFF7B5FD4),
-      label: 'MEDICINES',
-      sub: '3 Daily Refills',
-    ),
-    _ActionTile(
-      icon: Icons.calendar_month_rounded,
-      iconColor: Color(0xFF4A90D9),
-      label: 'APPOINTMENT',
-      sub: 'Book & Reschedule',
-    ),
-    _ActionTile(
-      icon: Icons.location_on_rounded,
-      iconColor: Color(0xFF4A90D9),
-      label: 'FIND NEARBY',
-      sub: 'Pharmacies & Clinics',
-    ),
-  ];
+  List<_ActionTile> _buildTiles(AppStrings strings) {
+    return <_ActionTile>[
+      _ActionTile(
+        icon: Icons.add_circle_outline_rounded,
+        iconColor: const Color(0xFF4A90D9),
+        label: strings.dashboardTileGetCare,
+        sub: strings.dashboardTileGetCareSub,
+      ),
+      _ActionTile(
+        icon: Icons.favorite_rounded,
+        iconColor: const Color(0xFFE05C7A),
+        label: strings.dashboardTileMyHealth,
+        sub: strings.dashboardTileMyHealthSub,
+      ),
+      _ActionTile(
+        icon: Icons.description_outlined,
+        iconColor: const Color(0xFF4A90D9),
+        label: strings.dashboardTileMyReferral,
+        sub: strings.dashboardTileMyReferralSub,
+      ),
+      _ActionTile(
+        icon: Icons.science_rounded,
+        iconColor: const Color(0xFF7B5FD4),
+        label: strings.dashboardTileMedicines,
+        sub: strings.dashboardTileMedicinesSub,
+      ),
+      _ActionTile(
+        icon: Icons.calendar_month_rounded,
+        iconColor: const Color(0xFF4A90D9),
+        label: strings.dashboardTileAppointment,
+        sub: strings.dashboardTileAppointmentSub,
+      ),
+      _ActionTile(
+        icon: Icons.location_on_rounded,
+        iconColor: const Color(0xFF4A90D9),
+        label: strings.dashboardTileFindNearby,
+        sub: strings.dashboardTileFindNearbySub,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final AppStrings strings = widget.strings;
+    final List<_NavItem> navItems = _buildNavItems(strings);
+    final List<_ActionTile> tiles = _buildTiles(strings);
     final String initials = widget.user.fullName.isNotEmpty
         ? widget.user.fullName.substring(0, 2).toUpperCase()
         : 'ME';
@@ -203,9 +218,9 @@ class _HomeContentState extends State<_HomeContent> {
                     // Top bar
                     _buildTopBar(initials),
                     const SizedBox(height: 4),
-                    const Text(
-                      'How are you feeling today?',
-                      style: TextStyle(
+                    Text(
+                      strings.dashboardHowFeeling,
+                      style: const TextStyle(
                         fontFamily: AppTypography.fontFamily,
                         fontFamilyFallback: AppTypography.fontFamilyFallback,
                         fontSize: 13.5,
@@ -216,11 +231,11 @@ class _HomeContentState extends State<_HomeContent> {
                     const SizedBox(height: 18),
 
                     // 2×3 action grid
-                    _buildActionGrid(),
+                    _buildActionGrid(tiles, strings),
                     const SizedBox(height: 18),
 
-                    // Today's Appointment card
-                    _buildAppointmentCard(),
+                    // Appointments section (today + upcoming + previous)
+                    _buildAppointmentsSection(widget.user, strings),
                     const SizedBox(height: 12),
                   ],
                 ),
@@ -228,7 +243,7 @@ class _HomeContentState extends State<_HomeContent> {
             ),
 
             // ── Bottom nav bar ────────────────────────────────────────────
-            _buildBottomNav(),
+            _buildBottomNav(navItems),
           ],
         ),
       ),
@@ -249,7 +264,7 @@ class _HomeContentState extends State<_HomeContent> {
                     fontFamily: AppTypography.fontFamily,
                     fontFamilyFallback: AppTypography.fontFamilyFallback,
                     fontSize: 24,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                     color: AppColors.ink,
                   ),
                 ),
@@ -268,9 +283,77 @@ class _HomeContentState extends State<_HomeContent> {
           ),
         ),
         // Notification bell with red dot
-        Stack(
-          children: <Widget>[
-            Container(
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => context.push(AppRoutes.notifications),
+            borderRadius: BorderRadius.circular(28),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.border),
+                    boxShadow: AppColors.cardShadow,
+                  ),
+                  child: const Icon(
+                    Icons.notifications_outlined,
+                    color: AppColors.ink,
+                    size: 22,
+                  ),
+                ),
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    width: 9,
+                    height: 9,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFE05C7A),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        // AI Assistant button
+        Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(28),
+          child: InkWell(
+            onTap: () => context.push(AppRoutes.chat),
+            borderRadius: BorderRadius.circular(28),
+            child: Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                gradient: AppColors.brandGradient,
+                shape: BoxShape.circle,
+                boxShadow: AppColors.brandGlow,
+              ),
+              child: const Icon(
+                Icons.smart_toy_rounded,
+                color: AppColors.white,
+                size: 22,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        // ME avatar (tap → profile settings)
+        Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(28),
+          child: InkWell(
+            onTap: () => context.push(AppRoutes.settings),
+            borderRadius: BorderRadius.circular(28),
+            child: Container(
               width: 42,
               height: 42,
               decoration: BoxDecoration(
@@ -279,46 +362,17 @@ class _HomeContentState extends State<_HomeContent> {
                 border: Border.all(color: AppColors.border),
                 boxShadow: AppColors.cardShadow,
               ),
-              child: const Icon(
-                Icons.notifications_outlined,
-                color: AppColors.ink,
-                size: 22,
-              ),
-            ),
-            Positioned(
-              right: 8,
-              top: 8,
-              child: Container(
-                width: 9,
-                height: 9,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE05C7A),
-                  shape: BoxShape.circle,
+              child: Center(
+                child: Text(
+                  initials,
+                  style: const TextStyle(
+                    fontFamily: AppTypography.fontFamily,
+                    fontFamilyFallback: AppTypography.fontFamilyFallback,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.brand,
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 10),
-        // ME avatar
-        Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.border),
-            boxShadow: AppColors.cardShadow,
-          ),
-          child: Center(
-            child: Text(
-              initials,
-              style: const TextStyle(
-                fontFamily: AppTypography.fontFamily,
-                fontFamilyFallback: AppTypography.fontFamilyFallback,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.brand,
               ),
             ),
           ),
@@ -328,7 +382,7 @@ class _HomeContentState extends State<_HomeContent> {
   }
 
   // ── 2×3 action grid ────────────────────────────────────────────────────────
-  Widget _buildActionGrid() {
+  Widget _buildActionGrid(List<_ActionTile> tiles, AppStrings strings) {
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
@@ -336,19 +390,113 @@ class _HomeContentState extends State<_HomeContent> {
       crossAxisSpacing: 12,
       mainAxisSpacing: 12,
       childAspectRatio: 1.55,
-      children: _tiles
+        children: tiles
           .map(
             (_ActionTile tile) => _ActionCard(
               tile: tile,
-              onTap: () => _showSnack('${tile.label} tapped'),
+              onTap: () {
+                if (tile.label == strings.dashboardTileGetCare) {
+                  context.push(AppRoutes.chat);
+                } else if (tile.label == strings.dashboardTileMyHealth) {
+                  context.push(AppRoutes.healthRecords);
+                } else if (tile.label == strings.dashboardTileFindNearby) {
+                  context.push(AppRoutes.nearby);
+                } else {
+                  _showSnack('${tile.label}${strings.dashboardSnackSuffix}');
+                }
+              },
             ),
           )
           .toList(),
     );
   }
 
-  // ── Today's appointment card ───────────────────────────────────────────────
-  Widget _buildAppointmentCard() {
+  // ── Appointments section ─────────────────────────────────────────────────────
+  Widget _buildAppointmentsSection(DashboardUser user, AppStrings strings) {
+    final List<AppointmentRecord> upcoming = user.appointments
+        .where((AppointmentRecord a) => a.status == 'Scheduled')
+        .toList();
+    final List<AppointmentRecord> previous = user.appointments
+        .where((AppointmentRecord a) => a.status == 'Completed')
+        .toList();
+
+    final List<Widget> columnChildren = <Widget>[];
+
+    // ── Today's / upcoming appointment detail card (first upcoming) ──
+    if (upcoming.isNotEmpty) {
+      columnChildren.add(
+        TweenAnimationBuilder<double>(
+          tween: Tween<double>(begin: 0, end: 1),
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeOutBack,
+          builder: (BuildContext context, double value, Widget? child) {
+            return Transform.translate(
+              offset: Offset(0, -24 * (1 - value)),
+              child: Opacity(
+                opacity: value.clamp(0.0, 1.0),
+                child: child,
+              ),
+            );
+          },
+          child: _appointmentDetailCard(
+            appointment: upcoming.first,
+            strings: strings,
+            onJoin: () => _showSnack(strings.dashboardJoining),
+          ),
+        ),
+      );
+      columnChildren.add(const SizedBox(height: 20));
+
+      // ── Remaining upcoming appointments ──
+      if (upcoming.length > 1) {
+        columnChildren.add(_sectionHeader(
+          label: strings.dashboardUpcomingAppointments,
+          color: AppColors.brand,
+          delayMs: 200,
+        ));
+        columnChildren.add(const SizedBox(height: 8));
+        for (int i = 1; i < upcoming.length; i++) {
+          columnChildren.add(_appointmentListTile(
+            appointment: upcoming[i],
+            isUpcoming: true,
+            delayMs: 300 + i * 100,
+          ));
+          columnChildren.add(const SizedBox(height: 8));
+        }
+        columnChildren.add(const SizedBox(height: 12));
+      }
+
+      // ── Previous appointments ──
+      if (previous.isNotEmpty) {
+        columnChildren.add(_sectionHeader(
+          label: strings.dashboardPreviousAppointments,
+          color: AppColors.body,
+          delayMs: 400,
+        ));
+        columnChildren.add(const SizedBox(height: 8));
+        for (int i = 0; i < previous.length; i++) {
+          columnChildren.add(_appointmentListTile(
+            appointment: previous[i],
+            isUpcoming: false,
+            delayMs: 500 + i * 100,
+          ));
+          columnChildren.add(const SizedBox(height: 8));
+        }
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: columnChildren,
+    );
+  }
+
+  // ── Appointment detail card (for today's / next appointment) ──────────────────
+  Widget _appointmentDetailCard({
+    required AppointmentRecord appointment,
+    required AppStrings strings,
+    required VoidCallback onJoin,
+  }) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -373,9 +521,9 @@ class _HomeContentState extends State<_HomeContent> {
                 ),
               ),
               const SizedBox(width: 7),
-              const Text(
-                "TODAY'S APPOINTMENT",
-                style: TextStyle(
+              Text(
+                strings.dashboardTodayAppointment,
+                style: const TextStyle(
                   fontFamily: AppTypography.fontFamily,
                   fontFamilyFallback: AppTypography.fontFamilyFallback,
                   fontSize: 12,
@@ -392,9 +540,9 @@ class _HomeContentState extends State<_HomeContent> {
                   color: const Color(0xFFEEF3FB),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  '8:30 AM • In 45m',
-                  style: TextStyle(
+                child: Text(
+                  appointment.timeLabel,
+                  style: const TextStyle(
                     fontFamily: AppTypography.fontFamily,
                     fontFamilyFallback: AppTypography.fontFamilyFallback,
                     fontSize: 11.5,
@@ -428,10 +576,10 @@ class _HomeContentState extends State<_HomeContent> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text(
-                      'Dr. Sarah Jenkins',
-                      style: TextStyle(
+                      appointment.title,
+                      style: const TextStyle(
                         fontFamily: AppTypography.fontFamily,
                         fontFamilyFallback: AppTypography.fontFamilyFallback,
                         fontSize: 15,
@@ -439,10 +587,10 @@ class _HomeContentState extends State<_HomeContent> {
                         color: AppColors.ink,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
-                      'General Consultation • Room 4B',
-                      style: TextStyle(
+                      appointment.subtitle,
+                      style: const TextStyle(
                         fontFamily: AppTypography.fontFamily,
                         fontFamilyFallback: AppTypography.fontFamilyFallback,
                         fontSize: 12.5,
@@ -464,16 +612,16 @@ class _HomeContentState extends State<_HomeContent> {
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   child: InkWell(
-                    onTap: () => _showSnack('Joining appointment...'),
+                    onTap: onJoin,
                     borderRadius: BorderRadius.circular(10),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            'Join',
-                            style: TextStyle(
+                            strings.dashboardJoinButton,
+                            style: const TextStyle(
                               fontFamily: AppTypography.fontFamily,
                               fontFamilyFallback: AppTypography.fontFamilyFallback,
                               fontSize: 13,
@@ -481,8 +629,8 @@ class _HomeContentState extends State<_HomeContent> {
                               color: AppColors.white,
                             ),
                           ),
-                          SizedBox(width: 4),
-                          Icon(Icons.arrow_forward_rounded,
+                          const SizedBox(width: 4),
+                          const Icon(Icons.arrow_forward_rounded,
                               size: 14, color: AppColors.white),
                         ],
                       ),
@@ -497,8 +645,149 @@ class _HomeContentState extends State<_HomeContent> {
     );
   }
 
+  // ── Appointment list tile (for upcoming & previous lists) ────────────────────
+  Widget _appointmentListTile({
+    required AppointmentRecord appointment,
+    required bool isUpcoming,
+    required int delayMs,
+  }) {
+    final Color statusColor = isUpcoming ? AppColors.brand : AppColors.body;
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: Duration(milliseconds: 500 + delayMs ~/ 2),
+      curve: Curves.easeOutBack,
+      builder: (BuildContext context, double value, Widget? child) {
+        return Transform.translate(
+          offset: Offset(0, -20 * (1 - value)),
+          child: Opacity(
+            opacity: value.clamp(0.0, 1.0),
+            child: child,
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: AppRadii.cardAll,
+          border: Border.all(color: AppColors.border),
+          boxShadow: AppColors.cardShadow,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      appointment.title,
+                      style: const TextStyle(
+                        fontFamily: AppTypography.fontFamily,
+                        fontFamilyFallback: AppTypography.fontFamilyFallback,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: statusColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      appointment.status,
+                      style: TextStyle(
+                        fontFamily: AppTypography.fontFamily,
+                        fontFamilyFallback: AppTypography.fontFamilyFallback,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: statusColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                appointment.subtitle,
+                style: const TextStyle(
+                  fontFamily: AppTypography.fontFamily,
+                  fontFamilyFallback: AppTypography.fontFamilyFallback,
+                  fontSize: 12.5,
+                  color: AppColors.muted,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: <Widget>[
+                  Text(
+                    appointment.dateLabel,
+                    style: const TextStyle(
+                      fontFamily: AppTypography.fontFamily,
+                      fontFamilyFallback: AppTypography.fontFamilyFallback,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.body,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    appointment.timeLabel,
+                    style: const TextStyle(
+                      fontFamily: AppTypography.fontFamily,
+                      fontFamilyFallback: AppTypography.fontFamilyFallback,
+                      fontSize: 12,
+                      color: AppColors.body,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Section header widget ────────────────────────────────────────────────────
+  Widget _sectionHeader({
+    required String label,
+    required Color color,
+    required int delayMs,
+  }) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: Duration(milliseconds: 500 + delayMs),
+      curve: Curves.easeOutBack,
+      builder: (BuildContext context, double value, Widget? child) {
+        return Transform.translate(
+          offset: Offset(0, -20 * (1 - value)),
+          child: Opacity(
+            opacity: value.clamp(0.0, 1.0),
+            child: child,
+          ),
+        );
+      },
+      child: Text(
+        label,
+        style: TextStyle(
+          fontFamily: AppTypography.fontFamily,
+          fontFamilyFallback: AppTypography.fontFamilyFallback,
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.5,
+          color: color,
+        ),
+      ),
+    );
+  }
+
   // ── Bottom navigation bar ──────────────────────────────────────────────────
-  Widget _buildBottomNav() {
+  Widget _buildBottomNav(List<_NavItem> navItems) {
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.white,
@@ -510,11 +799,11 @@ class _HomeContentState extends State<_HomeContent> {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List<Widget>.generate(
-              _navItems.length,
+              navItems.length,
               (int index) {
                 final bool active = _selectedNav == index;
                 return GestureDetector(
@@ -530,13 +819,13 @@ class _HomeContentState extends State<_HomeContent> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Icon(
-                        _navItems[index].icon,
+                        navItems[index].icon,
                         size: 24,
                         color: active ? AppColors.brand : AppColors.muted,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        _navItems[index].label,
+                        navItems[index].label,
                         style: TextStyle(
                           fontFamily: AppTypography.fontFamily,
                           fontFamilyFallback: AppTypography.fontFamilyFallback,
@@ -583,7 +872,7 @@ class _HomeContentState extends State<_HomeContent> {
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 icon: const Icon(Icons.logout_rounded),
-                label: const Text('Logout / लॉगिन बाहेर पडा'),
+                label: Text(widget.strings.dashboardLogoutAction),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFDC2626),
                   foregroundColor: Colors.white,

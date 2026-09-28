@@ -53,6 +53,7 @@ class AppDatabase {
       settings: const ConnectionSettings(
         connectTimeout: Duration(seconds: 8),
         queryTimeout: Duration(seconds: 15),
+        sslMode: SslMode.disable,
       ),
     );
     _connection = connection;

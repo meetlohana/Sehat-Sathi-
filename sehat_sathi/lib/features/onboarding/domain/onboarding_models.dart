@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/i18n/app_locale.dart';
+
 /// A language offered on the first onboarding step.
 @immutable
 class LanguageOption {

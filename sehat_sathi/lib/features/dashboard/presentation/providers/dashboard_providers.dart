@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../../core/i18n/locale_persistence.dart';
 import '../../../auth/data/user_health_repository.dart';
+import '../../../onboarding/presentation/providers/onboarding_providers.dart';
 
 /// Holds the current logged-in user's information and clinical data for the dashboard.
 class DashboardUser {
@@ -96,15 +97,36 @@ class DashboardNotifier extends StateNotifier<AsyncValue<DashboardUser>> {
           ? savedMobile
           : UserHealthRepository.dummyMobile;
 
+      final String selectedRole = ref.read(selectedRoleProvider);
       final PatientHealthProfile profile =
-          await _repository.getPatientProfile(targetMobile);
+          await _repository.getPatientProfile(targetMobile, selectedRole);
 
       if (!ref.mounted) return;
       state = AsyncValue.data(DashboardUser.fromProfile(profile));
     } catch (error) {
       if (!ref.mounted) return;
-      // Graceful fallback to dummy user so dashboard always renders smoothly
-      state = AsyncValue.data(DashboardUser.dummy());
+      // Graceful fallback to dummy user so dashboard always renders smoothly.
+      // Use the role selected during onboarding so ASHA workers are routed
+      // to the correct dashboard even when databases are unreachable.
+      final String fallbackRole = ref.read(selectedRoleProvider);
+      final DashboardUser dummy = DashboardUser.dummy();
+      state = AsyncValue.data(DashboardUser(
+        mobileNumber: dummy.mobileNumber,
+        fullName: dummy.fullName,
+        role: fallbackRole,
+        language: dummy.language,
+        healthIdNumber: dummy.healthIdNumber,
+        gender: dummy.gender,
+        email: dummy.email,
+        address: dummy.address,
+        loginCount: dummy.loginCount,
+        pgConnected: dummy.pgConnected,
+        mongoConnected: dummy.mongoConnected,
+        appointments: dummy.appointments,
+        healthRecords: dummy.healthRecords,
+        labResults: dummy.labResults,
+        prescriptions: dummy.prescriptions,
+      ));
     }
   }
 
@@ -123,3 +145,4 @@ final dashboardUserProvider =
     StateNotifierProvider<DashboardNotifier, AsyncValue<DashboardUser>>((ref) {
   return DashboardNotifier(ref);
 });
+

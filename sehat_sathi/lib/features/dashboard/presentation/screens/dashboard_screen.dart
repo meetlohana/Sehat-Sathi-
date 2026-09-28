@@ -32,7 +32,7 @@ class DashboardScreen extends ConsumerWidget {
           if (context.mounted) context.go(AppRoutes.login);
         },
       ),
-      data: (DashboardUser user) => _HomeContent(
+      data: (DashboardUser user) => PatientDashboardContent(
         user: user,
         onLogout: () async {
           await ref.read(dashboardUserProvider.notifier).logout();
@@ -98,7 +98,7 @@ class _Error extends StatelessWidget {
                   backgroundColor: AppColors.brand,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: AppRadii.buttonAll),
+                  shape: const RoundedRectangleBorder(borderRadius: AppRadii.buttonAll),
                 ),
                 child: const Text('Retry / पुन्हा प्रयत्न करा'),
               ),
@@ -107,7 +107,7 @@ class _Error extends StatelessWidget {
                 onPressed: onLogout,
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: AppRadii.buttonAll),
+                  shape: const RoundedRectangleBorder(borderRadius: AppRadii.buttonAll),
                   side: const BorderSide(color: AppColors.border),
                 ),
                 child: const Text('Back to Login / लॉगिन पेजवर परत जा'),
@@ -121,18 +121,22 @@ class _Error extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Main Home Content
+// Patient Home Content
 // ─────────────────────────────────────────────────────────────────────────────
-class _HomeContent extends StatefulWidget {
-  const _HomeContent({required this.user, required this.onLogout});
+class PatientDashboardContent extends StatefulWidget {
+  const PatientDashboardContent({
+    super.key,
+    required this.user,
+    required this.onLogout,
+  });
   final DashboardUser user;
   final VoidCallback onLogout;
 
   @override
-  State<_HomeContent> createState() => _HomeContentState();
+  State<PatientDashboardContent> createState() => PatientDashboardContentState();
 }
 
-class _HomeContentState extends State<_HomeContent> {
+class PatientDashboardContentState extends State<PatientDashboardContent> {
   int _selectedNav = 0;
 
   static const List<_NavItem> _navItems = <_NavItem>[
@@ -425,10 +429,10 @@ class _HomeContentState extends State<_HomeContent> {
                 ),
               ),
               const SizedBox(width: 12),
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text(
                       'Dr. Sarah Jenkins',
                       style: TextStyle(
@@ -588,7 +592,7 @@ class _HomeContentState extends State<_HomeContent> {
                   backgroundColor: const Color(0xFFDC2626),
                   foregroundColor: Colors.white,
                   minimumSize: const Size.fromHeight(48),
-                  shape: RoundedRectangleBorder(borderRadius: AppRadii.buttonAll),
+                  shape: const RoundedRectangleBorder(borderRadius: AppRadii.buttonAll),
                 ),
                 onPressed: () {
                   Navigator.pop(ctx);
@@ -692,3 +696,8 @@ class _NavItem {
   final IconData icon;
   final String label;
 }
+
+
+
+
+

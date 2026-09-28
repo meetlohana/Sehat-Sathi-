@@ -4,6 +4,30 @@ import 'package:flutter/material.dart';
 /// onboarding references (`image/Screenshot 2026-09-14 014826.png` and
 /// `image/Screenshot 2026-09-14 014943.png`).
 abstract final class AppColors {
+  // ── ASHA Worker Dashboard palette ───────────────────────────────────────
+  /// Primary deep blue for ASHA dashboard accents and icons.
+  static const Color primaryBlue = Color(0xFF0057D9);
+
+  /// Darker blue for gradients and pressed states.
+  static const Color darkBlue = Color(0xFF0047B3);
+
+  /// Success / status green for completed items.
+  static const Color successGreen = Color(0xFF008A5A);
+
+  /// Emergency red for alerts and destructive actions.
+  static const Color emergencyRed = Color(0xFFD92D20);
+
+  /// Very light pink background for emergency alert surfaces.
+  static const Color emergencyLight = Color(0xFFFFF1F0);
+
+  /// Primary text on the ASHA dashboard (#1F2937).
+  static const Color textPrimary = Color(0xFF1F2937);
+
+  /// Secondary text on the ASHA dashboard (#64748B).
+  static const Color textSecondary = Color(0xFF64748B);
+
+  /// Page background fill (#F8FAFC) — reused across dashboard surfaces.
+  static const Color pageBackground = Color(0xFFF8FAFC);
   /// Page background.
   static const Color background = Color(0xFFFFFFFF);
 

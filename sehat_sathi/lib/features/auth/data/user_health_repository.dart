@@ -313,12 +313,15 @@ class UserHealthRepository {
   }
 
   /// Loads full profile and records combining PostgreSQL and MongoDB.
-  Future<PatientHealthProfile> getPatientProfile(String mobileNumber) async {
+  Future<PatientHealthProfile> getPatientProfile(
+    String mobileNumber, [
+    String fallbackRole = 'patient',
+  ]) async {
     bool pgOk = false;
     bool mongoOk = false;
 
     String fullName = dummyFullName;
-    String role = 'patient';
+    String role = fallbackRole;
     String language = 'mr';
     String healthId = dummyHealthId;
     String gender = 'Male / पुरुष';

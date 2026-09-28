@@ -10,6 +10,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/i18n/locale_persistence.dart';
+import '../../../onboarding/data/onboarding_catalog.dart';
+import '../../../onboarding/domain/onboarding_models.dart';
 import '../../../onboarding/presentation/providers/onboarding_providers.dart';
 import '../../data/login_repository.dart';
 import '../../data/user_health_repository.dart';
@@ -165,8 +167,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         mobileNumber: dummyMobile,
         otpCode: '492700',
         loginMethod: 'Phone OTP',
-        role: 'patient',
-        language: 'mr',
+        role: ref.read(selectedRoleProvider),
+        language: ref.read(localeIdProvider),
         rememberMe: true,
       );
       if (!mounted) return;
@@ -187,6 +189,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final RoleOption selectedRole = OnboardingCatalog.roles.firstWhere(
+      (RoleOption r) => r.id == ref.read(selectedRoleProvider),
+      orElse: () => OnboardingCatalog.roles.first,
+    );
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
@@ -233,13 +239,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // ─── Phone OTP body ────────────────────────────────────
                       ...<Widget>[
                         SelectedRoleCard(
-                          roleTitle: 'PATIENT',
-                          rolePill: 'रुग्ण',
+                          roleTitle: selectedRole.title,
+                          rolePill: selectedRole.bilingualLabel,
                           stepLine: 'Step 1 पूर्ण (Changeable)',
                           selectedLabel: 'Selected Role',
                           changeLabel: 'बदला',
-                          onChange: () =>
-                              _showSnack('भूमिका बदलण्यासाठी onboarding पूर्ण करा.'),
+                          onChange: () => _showSnack(
+                              'भूमिका बदरण्यासाठी onboarding पूर्ण करा.'),
                         ),
                         const SizedBox(height: AppSpacing.md),
                         Container(

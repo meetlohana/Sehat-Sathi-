@@ -149,7 +149,7 @@ abstract final class AppTypography {
     color: AppColors.muted,
   );
 
-  /// 12 / w600 — Marathi / Hindi pill rendered next to a role title.
+   /// 12 / w600 — Marathi / Hindi pill rendered next to a role title.
   static const TextStyle cardBadge = TextStyle(
     fontFamily: fontFamily,
     fontFamilyFallback: fontFamilyFallback,
@@ -157,6 +157,148 @@ abstract final class AppTypography {
     fontWeight: FontWeight.w600,
     height: 1.25,
     color: AppColors.brand,
+  );
+
+  // ── ASHA Worker Dashboard typography ─────────────────────────────────────
+
+  /// 16 / w500 — greeting subtitle (e.g. "Ward 4 • Mohalla • Sub-Center 04").
+  static const TextStyle ashaGreetingSub = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    height: 1.3,
+    color: AppColors.body,
+  );
+
+  /// 18 / w600 — section headings ("Today's Focus", "Quick Actions").
+  static const TextStyle ashaSectionHeading = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    height: 1.3,
+    color: AppColors.textPrimary,
+  );
+
+  /// 14 / w500 — subtitle under section headings.
+  static const TextStyle ashaSectionSub = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+    color: AppColors.body,
+  );
+
+  /// 11 / w600 — status pill text ("Online Sync", "Online").
+  static const TextStyle ashaStatusPill = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 11,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+    color: AppColors.primaryBlue,
+  );
+
+  /// 14 / w600 — stat card subtitle ("Today's Tasks").
+  static const TextStyle ashaStatSub = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    height: 1.3,
+    color: AppColors.body,
+  );
+
+  /// 11 / w500 — stat card supporting text.
+  static const TextStyle ashaStatSupporting = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 11,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+    color: AppColors.body,
+  );
+
+  /// 12 / w600 — emergency alert badge text.
+  static const TextStyle ashaBadgeSmall = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    height: 1.3,
+    color: AppColors.emergencyRed,
+  );
+
+  /// 11 / w400 — small body text inside cards.
+  static const TextStyle ashaBodySmall = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 11,
+    fontWeight: FontWeight.w400,
+    height: 1.4,
+    color: AppColors.textSecondary,
+  );
+
+  /// 12 / w500 — emergency alert item text.
+  static const TextStyle ashaEmergencyText = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+    color: AppColors.textPrimary,
+  );
+
+  /// 13 / w600 — quick action button title.
+  static const TextStyle ashaActionTitle = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    height: 1.3,
+    color: AppColors.textPrimary,
+  );
+
+  /// 11 / w500 — quick action button subtitle.
+  static const TextStyle ashaActionSub = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 11,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+    color: AppColors.body,
+  );
+
+  /// 12 / w600 — bottom navigation label.
+  static const TextStyle ashaNavLabel = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    height: 1.3,
+  );
+
+  /// 15 / w500 — search field placeholder.
+  static const TextStyle ashaSearchHint = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+    height: 1.2,
+    color: AppColors.muted,
+  );
+
+  /// 10 / w600 — section label "Today's Focus".
+  static const TextStyle ashaSectionLabel = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+    letterSpacing: 0.5,
+    color: AppColors.body,
   );
 
   /// Baseline Material text theme so default widgets inherit the brand fonts.

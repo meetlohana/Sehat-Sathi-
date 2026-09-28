@@ -2,11 +2,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/login_success_screen.dart';
-import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../../features/dashboard/presentation/screens/home_screen.dart';
 import '../../features/onboarding/presentation/screens/language_selection_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_done_screen.dart';
 import '../../features/onboarding/presentation/screens/role_selection_screen.dart';
-
 /// Application routes.
 ///
 /// Flow: language -> role -> onboarding done -> login -> home (dashboard).
@@ -63,7 +62,7 @@ GoRouter createAppRouter() {
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
-        builder: (context, state) => const DashboardScreen(),
+        builder: (context, state) => const HomeScreen(),
       ),
       GoRoute(
         path: '/dashboard',

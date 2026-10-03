@@ -1,0 +1,7 @@
+# Add these under `dependencies:` in YOUR existing pubspec.yaml
+dependencies:
+  speech_to_text: ^7.0.0
+  flutter_tts: ^4.2.0
+  http: ^1.2.2
+  connectivity_plus: ^6.0.5
+  sqflite: ^2.3.3
